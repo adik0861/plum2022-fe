@@ -2,7 +2,9 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 let express = require('express');
-// app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'assets')));
+
+// let app = express()
 
 
 function createWindow() {
