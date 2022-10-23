@@ -1,75 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
 <head>
-    <link href="/assets/app.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-          crossorigin="anonymous">
+    <link href = "/assets/app.css" rel = "stylesheet">
+    <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          rel = "stylesheet" integrity = "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+          crossorigin = "anonymous">
+    <link rel = "stylesheet"
+          href = "https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
+
     <title>Plum</title>
 </head>
-<body class="container navbar-dark bg-dark text-light">
-<nav class="navbar navbar-dark text-grey">
-    <a class="navbar-brand" href="#">
-        <img src="/assets/logo/notepad.svg"
-             width="30"
-             height="30"
-             class="d-inline-block align-top" alt="">
+<body class = "container navbar-dark bg-dark text-light">
+<nav class = "navbar navbar-dark text-grey">
+    <a class = "navbar-brand" href = "#">
+        <img src = "/assets/logo/notepad.svg"
+             width = "30"
+             height = "30"
+             class = "d-inline-block align-top" alt = "">
         Notepad!
     </a>
 </nav>
 <h1>Electron Notepad Test</h1>
 
-<!--<form autocomplete="off" action="/action_page.php">-->
-<!--    <div class="autocomplete" style="width:300px;">-->
-<!--        <input id="myInput" type="text" name="myCountry" placeholder="Country">-->
-<!--    </div>-->
-<!--    <input type="submit">-->
-<!--</form>-->
-
-<div class="form-group">
-    <label for="autoComplete">Enter Text:</label>
-    <textarea class="form-control" id="autoComplete" rows="3"></textarea>
+<div class = "form-group">
+    <!--    <label for="autoComplete">Enter Text:</label>-->
+    <textarea class = "form-control" id = "autoComplete" spellcheck = "false" rows = "3"></textarea>
     <br>
-    <button type="button" class="btn btn-light" onclick="submit_a();">Submit</button>
 </div>
 
 
-<div id="showText"></div>
+<div id = "showText"></div>
 <br>
 
-<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
 <script>
+
+    let keyWords = `CREATE
+                    ENDCREATE
+                    FORM
+                    ENDFORM
+                    VALIDATION
+                    ENDVALIDATION
+                    USING
+                    GIVEN
+                    ENDGIVEN
+                    IF
+                    OR
+                    AND
+                    END
+                    SET
+                    DISPLAY MSG`
+
+    function getLastChrIdx(str, chr) {
+        return str.search(`(\\-?${chr})(?!.*${chr})`)
+    }
+
+    function getSubString(str) {
+        let lastSpaceIdx = getLastChrIdx(str, '\\s')
+        return str.slice(lastSpaceIdx).trim()
+    }
+
     const autoCompleteJS = new autoComplete(
         {
-            placeHolder: "Search for Food...",
-            data: {src: ['a', 'b', 'c']},
-            resultItem: {highlight: true,},
-            // autoComplete.js Config Options
-            query: (query) => {
-                // Split query into array
-                const querySplit = query.split(",");
-                // Get last query value index
-                const lastQuery = querySplit.length - 1;
-                // Trim new query
-                const newQuery = querySplit[lastQuery].trim();
+            selector: "#autoComplete",
+            placeHolder: "Begin creating form...",
+            data: {
+                src: ['CREATE', 'FORM', 'ENDFORM', 'VALIDATION', 'GIVEN', 'ENDGIVEN', 'IF', 'AND', 'OR', 'SET', 'DISPLAY MSG', 'END', 'ENDVALIDATION', 'ENDCREATE'],
+                // src: [
+                //     {'CREATE': 'CREATE'}, {'CREATE': 'ENDCREATE'}, {'FORM': 'FORM'}, {'FORM': 'ENDFORM'}, {'VALIDATION': 'VALIDATION'}, {'VALIDATION': 'ENDVALIDATION'}, {'GIVEN': 'GIVEN'}, {'GIVEN': 'ENDGIVEN'}, {'IF': 'IF'}, {'IF': 'OR'}, {'IF': 'AND'}, {'IF': 'END'}, {'IF': 'SET'}, {'ENDGIVEN': 'ENDGIVEN'}, {'AND': 'AND'}, {'ENDFORM': 'ENDFORM'}, {'END': 'END'}, {'ENDCREATE': 'ENDCREATE'}, {'ENDVALIDATION': 'ENDVALIDATION'}, {'OR': 'OR'}, {'SET': 'SET'}
+                // ],
+                // keys: ['CREATE', 'FORM', 'ENDFORM', 'VALIDATION', 'GIVEN', 'ENDGIVEN', 'IF', 'AND', 'OR', 'SET', 'DISPLAY MSG', 'END', 'ENDVALIDATION', 'ENDCREATE'],
+                cache: false,
+                // filter: (list) => {
+                //     // filters for results that match the starting value
+                //     return list.filter((item) => {
+                //         let inputValue = autoCompleteJS.input.value.toLowerCase();
+                //         inputValue = getSubString(inputValue)
+                //         // const itemValue = item.value[item.key].toLowerCase();
+                //         const itemValue = item.value.toLowerCase()
+                //         if (itemValue.startsWith(inputValue)) {
+                //             return item.value;
+                //         }
+                //     });
+                // },
+            },
 
-                return newQuery;
+            resultsList: {
+                element: (list, data) => {
+                    if (!data.results.length) {
+                        // Create "No Results" message element
+                        const message = document.createElement("div");
+                        // Add class to the created element
+                        message.setAttribute("class", "no_result");
+                        // Add message text content
+                        message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
+                        // Append message element to the results list
+                        list.prepend(message);
+                    }
+                },
+                noResults: true,
+            },
+            resultItem: {
+                element: (item, data) => {
+                    // Modify Results Item Style
+                    item.style = "display: flex; justify-content: space-between;";
+                    // Modify Results Item Content
+                    item.innerHTML = `
+                      <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                            ${data.match}
+                      </span>
+                      <span style="display: flex; align-items: center; font-size: 13px; font-weight: 100; text-transform: uppercase; color: rgba(0,0,0,.2);">
+                        ${data.key}
+                      </span>`;
+                },
+                highlight: true
+            },
+
+            submit: true,
+            query: (query) => {
+                console.log(query)
+                return getSubString(query)
             },
             events: {
                 input: {
+                    focus() {
+                        const inputValue = autoCompleteJS.input.value;
+                        if (inputValue.length) autoCompleteJS.start();
+                    },
                     selection(event) {
                         const feedback = event.detail;
+                        const chrToReplace = feedback.query
                         const input = autoCompleteJS.input;
-                        // Trim selected Value
-                        const selection = feedback.selection.value.trim();
-                        // Split query into array and trim each value
-                        const query = input.value.split(",").map(item => item.trim());
-                        // Remove last query
+                        let chrToReplaceIdx = getLastChrIdx(input.value, '\\s')
+                        if (chrToReplaceIdx === -1) {
+                            chrToReplaceIdx = 0;
+                        }
+                        let selection = feedback.selection;
+                        if ('key' in feedback.selection) {
+                            selection = selection.value[selection.key]
+                        } else {
+                            selection = selection.value
+                        }
+                        const query = input.value.split('\s').map(x => x.trim());
                         query.pop();
-                        // Add selected value
                         query.push(selection);
-                        // Replace Input value with the new query
-                        input.value = query.join(", ") + ", ";
+                        const replaceStr = input.value.slice(0, chrToReplaceIdx)
+                        input.value = replaceStr.trim() + " " + selection.trim() + " "
+                        input.value = input.value.trim() + " "
                     }
                 }
             },
