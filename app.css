@@ -1,5 +1,12 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans';
 
+
+.mark, mark {
+    padding: 0 !important;
+    background-color: #fcf8e3;
+}
+
+
 * {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

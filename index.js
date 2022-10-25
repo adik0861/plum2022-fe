@@ -1,7 +1,8 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
 const path = require('path')
-let express = require('express');
+const express = require('express');
+// const {app, BrowserWindow} = require('electron')
+const { Menu, app, BrowserWindow } = require('electron');
 app.use(express.static(path.join(__dirname, 'assets')));
 
 // let app = express()
