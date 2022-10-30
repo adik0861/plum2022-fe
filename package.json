@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@tarekraafat/autocomplete.js": "^10.2.7",
-    "express": "^4.18.1"
+    "express": "^4.18.2"
   }
 }
